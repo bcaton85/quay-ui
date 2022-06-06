@@ -13,8 +13,18 @@ export interface Tag {
     last_modified: string,
     manifest_digest: string,
     reversion: boolean,
+    security: string,
     size: number,
     start_ts: number,
+    ManifestLists: ManifestList,
+}
+
+export interface ManifestList {
+    Arch: string,
+    Security: string,
+    Size: string,
+    manifest_digest: string,
+    Format: number,
 }
 
 export async function getTags(org: string, repo: string) {
