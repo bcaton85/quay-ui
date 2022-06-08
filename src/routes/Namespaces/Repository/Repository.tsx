@@ -53,13 +53,13 @@ export default function Repository(props) {
         <Page>
             <PageBreadcrumb>
                 <Breadcrumb>
-                    <BreadcrumbItem to="#">namespaces</BreadcrumbItem>
-                    <BreadcrumbItem to="#">{organization}</BreadcrumbItem>
-                    <BreadcrumbItem to="#" isActive>{repository}</BreadcrumbItem>
+                    <BreadcrumbItem data-testid="namespace-breadcrumb" to="#">namespaces</BreadcrumbItem>
+                    <BreadcrumbItem data-testid="org-breadcrumb" to="#">{organization}</BreadcrumbItem>
+                    <BreadcrumbItem  data-testid="repo-breadcrumb"to="#" isActive>{repository}</BreadcrumbItem>
                 </Breadcrumb>
             </PageBreadcrumb>
             <PageSection variant={PageSectionVariants.light}>
-                <Title headingLevel="h1">{repository}</Title>
+                <Title data-testid="repo-title" headingLevel="h1">{repository}</Title>
             </PageSection>
             <PageSection variant={PageSectionVariants.light}>
                 <Tabs

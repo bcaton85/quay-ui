@@ -72,6 +72,7 @@ export function TagsToolbar(props: ToolBarProps) {
                 </ToolbarItem>
                 <ToolbarItem alignment={{ default: "alignRight" }}>
                     <Pagination
+                        data-testid="pagination"
                         perPageComponent="button"
                         itemCount={props.tagCount}
                         perPage={pagination.perPage}
