@@ -2,13 +2,13 @@ import {mock} from 'src/tests/fake-db/MockAxios';
 import {AxiosRequestConfig} from 'axios';
 import {TagsResponse, Tag} from 'src/resources/TagResource';
 
-const testTag: Tag = {
-  name: 'testtag',
+const latestTag: Tag = {
+  name: 'latest',
   is_manifest_list: false,
   last_modified: 'Thu, 02 Jun 2022 19:12:32 -0000',
   size: 100,
   manifest_digest:
-    'sha256:ad6562704f3759fb50f0d3de5f80a38f65a85e709b77fd24491253990f30b6be',
+    'sha256:1234567890101112150f0d3de5f80a38f65a85e709b77fd24491253990f306be',
   reversion: false,
   start_ts: 1654197152,
   manifest_list: undefined,
@@ -20,7 +20,7 @@ const manifestListTag: Tag = {
   last_modified: 'Thu, 02 Jun 2022 19:12:32 -0000',
   size: 100,
   manifest_digest:
-    'sha256:ad6562704f3759fb50f0d3de5f80a38f65a85e709b77fd24491253990f30b6be',
+    'sha256:abcdefghij3759fb50f0d3de5f80a38f65a85e709b77fd24491253990f30b6be',
   reversion: false,
   start_ts: 1654197152,
   manifest_list: {
@@ -43,7 +43,7 @@ mock.onGet(specificTagPathRegex).reply((request: AxiosRequestConfig) => {
   if (searchParams.get('specificTag') === 'manifestlist') {
     tagResponse.tags.push(manifestListTag);
   } else {
-    tagResponse.tags.push(testTag);
+    tagResponse.tags.push(latestTag);
   }
   return [200, tagResponse];
 });
@@ -57,7 +57,7 @@ mock.onGet(tagPathRegex).reply(() => {
     has_additional: false,
     tags: [],
   };
-  tagResponse.tags.push(testTag);
+  tagResponse.tags.push(latestTag);
   tagResponse.tags.push(manifestListTag);
   return [200, tagResponse];
 });
