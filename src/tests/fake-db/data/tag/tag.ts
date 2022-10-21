@@ -2,62 +2,65 @@ import {mock} from 'src/tests/fake-db/MockAxios';
 import {AxiosRequestConfig} from 'axios';
 import {TagsResponse, Tag} from 'src/resources/TagResource';
 
-const latestTag: Tag = {
-  name: 'latest',
-  is_manifest_list: false,
-  last_modified: 'Thu, 02 Jun 2022 19:12:32 -0000',
-  size: 100,
-  manifest_digest:
-    'sha256:1234567890101112150f0d3de5f80a38f65a85e709b77fd24491253990f306be',
-  reversion: false,
-  start_ts: 1654197152,
-  manifest_list: undefined,
-};
-
-const manifestListTag: Tag = {
-  name: 'manifestlist',
-  is_manifest_list: true,
-  last_modified: 'Thu, 02 Jun 2022 19:12:32 -0000',
-  size: 100,
-  manifest_digest:
-    'sha256:abcdefghij3759fb50f0d3de5f80a38f65a85e709b77fd24491253990f30b6be',
-  reversion: false,
-  start_ts: 1654197152,
-  manifest_list: {
-    schemaVersion: 2,
-    mediaType: '',
-    manifests: [],
+let tags: Tag[] = [
+  {
+    name: 'latest',
+    is_manifest_list: false,
+    last_modified: 'Thu, 02 Jun 2022 19:12:32 -0000',
+    size: 100,
+    manifest_digest:
+      'sha256:1234567890101112150f0d3de5f80a38f65a85e709b77fd24491253990f306be',
+    reversion: false,
+    start_ts: 1654197152,
+    manifest_list: undefined,
   },
-};
+  {
+    name: 'manifestlist',
+    is_manifest_list: true,
+    last_modified: 'Thu, 02 Jun 2022 19:12:32 -0000',
+    size: 100,
+    manifest_digest:
+      'sha256:abcdefghij3759fb50f0d3de5f80a38f65a85e709b77fd24491253990f30b6be',
+    reversion: false,
+    start_ts: 1654197152,
+    manifest_list: {
+      schemaVersion: 2,
+      mediaType: '',
+      manifests: [],
+    },
+  },
+];
 
 const specificTagPathRegex = new RegExp(
   `/api/v1/repository/.+/.+/tag/?.+&specificTag=.+`,
 );
 mock.onGet(specificTagPathRegex).reply((request: AxiosRequestConfig) => {
+  const searchParams = new URLSearchParams(request.url);
   const tagResponse: TagsResponse = {
     page: 1,
     has_additional: false,
-    tags: [],
+    tags: tags.filter((tag) => tag.name === searchParams.get('specificTag')),
   };
-  const searchParams = new URLSearchParams(request.url);
-  if (searchParams.get('specificTag') === 'manifestlist') {
-    tagResponse.tags.push(manifestListTag);
-  } else {
-    tagResponse.tags.push(latestTag);
-  }
   return [200, tagResponse];
 });
 
 const tagPathRegex = new RegExp(
-  `/api/v1/repository/.+/.+/tag/?.+onlyActiveTags=true$`,
+  `/api/v1/repository/.+/.+/tag/\\?.+onlyActiveTags=true$`,
 );
-mock.onGet(tagPathRegex).reply(() => {
-  const tagResponse: TagsResponse = {
-    page: 1,
-    has_additional: false,
-    tags: [],
-  };
-  tagResponse.tags.push(latestTag);
-  tagResponse.tags.push(manifestListTag);
-  return [200, tagResponse];
+mock.onGet(tagPathRegex).reply((request: AxiosRequestConfig) => {
+  return [
+    200,
+    {
+      page: 1,
+      has_additional: false,
+      tags: tags,
+    },
+  ];
+});
+
+const deleteTagRegex = new RegExp(`/api/v1/repository/.+/.+/tag/.+`);
+mock.onDelete(deleteTagRegex).reply((request: AxiosRequestConfig) => {
+  const tagName: string = request.url.split('/').pop();
+  tags = tags.filter((tag) => tag.name !== tagName);
+  return [204, {}];
 });
