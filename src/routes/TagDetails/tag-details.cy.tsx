@@ -1,6 +1,19 @@
-// /// <reference types="cypress" />
+/// <reference types="cypress" />
 
-// import {formatDate} from '../../src/libs/utils';
+import {RecoilRoot} from 'recoil';
+import TagDetails from './TagDetails';
+
+describe('<TagDetails>', () => {
+  it('mounts', () => {
+    cy.mount(
+      <RecoilRoot>
+        <TagDetails />
+      </RecoilRoot>,
+    );
+  });
+});
+
+// import {formatDate} from '../../libs/utils';
 
 // describe('Tag Details Page', () => {
 //   it.only('renders details', () => {
