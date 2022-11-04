@@ -33,17 +33,11 @@ jobs:
           repository: bcaton85/quay
           path: './quay'
           ref: ui-ci
+        # TODO: figure out how to cache build deps. Something like the following:
+        # docker buildx create --use --driver=docker-container
+        # docker buildx build -t localhost/quay-local:latest --cache-to type=gha --cache-from type=gha .
       - name: Start Quay
-        run: |
-          # TODO: figure out how to cache build deps
-          # docker buildx create --use --driver=docker-container
-          # docker buildx build -t localhost/quay-local:latest --cache-to type=gha --cache-from type=gha .
-          cd quay && make ci-up
-      - name: Load Test Data
-        run: |
-          sleep 15s
-          docker cp ./cypress/test/quay-test-data.txt quay-db:/tmp/data.txt
-          docker exec -t quay-db bash -c 'psql quay -U quay < /tmp/data.txt'
+        run: cd quay && make ci-up
       - name: Cypress run
         uses: cypress-io/github-action@v4.2.0
         with:

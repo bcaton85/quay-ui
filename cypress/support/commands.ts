@@ -25,13 +25,25 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 //
-// declare global {
-//   namespace Cypress {
+// declare namespace Cypress {
 //     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
+//         loginByCSRF: (arg: string) => void;
 //     }
-//   }
 // }
+
+// const username = 'user1';
+// const password = 'password';
+// Cypress.Commands.add('loginByCSRF', (csrfToken) => {
+//     cy.request({
+//       method: 'POST',
+//       url: `${Cypress.env('REACT_QUAY_APP_API_URL')}/api/v1/signin`,
+//       failOnStatusCode: false, // dont fail so we can make assertions
+//       headers: {
+//         'X-CSRF-Token': csrfToken
+//       },
+//       body: {
+//         username: username,
+//         password: password,
+//       },
+//     })
+//   })

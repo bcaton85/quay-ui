@@ -4,6 +4,7 @@ export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:9000',
     video: false,
+    defaultCommandTimeout: 15000,
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
